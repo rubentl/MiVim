@@ -1,0 +1,20 @@
+priority -45
+
+global !p 
+from vimsnippets import foldmarker, make_box, get_comment_format
+endglobal 
+
+snippet cabecera "Una cabecera de información del archivo" bA 
+`!p snip.rv = get_comment_format()[0]` Información del archivo 
+`!p snip.rv = get_comment_format()[0]` :Archivo:    `!p snip.rv = snip.fn`
+`!p snip.rv = get_comment_format()[0]` :Autor:      Rubén Toca Lucio
+`!p snip.rv = get_comment_format()[0]` :Fecha:      `date +%c`
+`!p snip.rv = get_comment_format()[0]` :Motivo:     ${1}
+endsnippet 
+
+snippet foldp "Inserta un par de marcas de plegado" bA
+`!p snip.rv = get_comment_format()[0]` ${1:Fold description} `!p snip.rv = foldmarker()[0]`${2:1} `!p snip.rv = get_comment_format()[2]`
+${0:${VISUAL:Content}}
+`!p snip.rv = get_comment_format()[0]` $2`!p snip.rv = foldmarker()[1]` $1 `!p snip.rv = get_comment_format()[2]`
+endsnippet
+# vim: set ts=4 sw=4 tw=82 fdm=syntax noet :
