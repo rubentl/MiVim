@@ -40,9 +40,6 @@
 [submodule "pack/plugins/start/goyo"]
 	path = pack/plugins/start/goyo
 	url = https://github.com/junegunn/goyo.vim
-[submodule "pack/plugins/start/latex"]
-	path = pack/plugins/start/latex
-	url = https://github.com/gerw/vim-latex-suite
 [submodule "pack/plugins/start/neovim-colors-solarized-truecolor-only"]
 	path = pack/plugins/start/neovim-colors-solarized-truecolor-only
 	url = https://github.com/frankier/neovim-colors-solarized-truecolor-only
@@ -73,9 +70,6 @@
 [submodule "pack/plugins/start/vdebug"]
 	path = pack/plugins/start/vdebug
 	url = https://github.com/joonty/vdebug
-[submodule "pack/plugins/start/vim-latex-live-preview"]
-	path = pack/plugins/start/vim-latex-live-preview
-	url = https://github.com/xuhdev/vim-latex-live-preview
 [submodule "pack/plugins/start/deoplete.nvim"]
 	path = pack/plugins/start/deoplete.nvim
 	url = https://github.com/Shougo/deoplete.nvim
@@ -151,3 +145,6 @@
 [submodule "pack/plugins/start/bookmarks"]
 	path = pack/plugins/start/bookmarks
 	url = https://github.com/MattesGroeger/vim-bookmarks.git
+[submodule "pack/plugins/start/vimtex"]
+	path = pack/plugins/start/vimtex
+	url = https://github.com/lervag/vimtex.git

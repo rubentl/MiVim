@@ -1,21 +1,27 @@
 set packpath^=~/.vim
 function! MapTex()
-    " imap á \'a
-    " imap é \'e
-    " imap í \'i
-    " imap ó \'o
-    " imap ú \'u
-    " imap Á \'A
-    " imap É \'E
-    " imap Í \'I
-    " imap Ó \'O
-    " imap Ú \'U
-    " imap ü \"u
-    " imap Ü \"U
-    imap ¡ \textexclamdown
-    imap ¿ \textquestiondown
-    " imap ñ \~n
-    " imap Ñ \~N
+    imap á \'a
+    imap é \'e
+    imap í \'{\i}
+    imap ó \'o
+    imap ú \'u
+    imap Á \'A
+    imap É \'E
+    imap Í \'I
+    imap Ó \'O
+    imap Ú \'U
+    imap ü \"u
+    imap Ü \"U
+    imap ¡ \textexclamdown{}
+    imap ¿ \textquestiondown{}
+    imap ñ \~n
+    imap Ñ \~N
+    if empty(v:servername) && exists('*remote_startserver')
+      call remote_startserver('VIM')
+    endif
+    call deoplete#custom#var('omni', 'input_patterns', {
+        \'tex': g:vimtex#re#deoplete
+        \})
 endfunction
 function! MapPhp()
     imap .. =>
@@ -201,7 +207,7 @@ let g:riv_projects = [wiki, notas]
 let g:riv_default_path = '~/Documentos'
 let g:riv_month_names = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre'
 let g:xml_no_html = 1
-let g:tex_fold_enabled=1
+let g:vimtex_fold_enabled=1
 let g:vimsyn_folding='af'
 let g:rust_fold = 1
 let g:javaScript_folding=1
@@ -255,14 +261,9 @@ let g:vdebug_keymap = {
     \   "set_breakpoint" : "<leader><F10>",
     \}
 " Tex settings
-let g:Tex_DefaultTargetFormat='pdf'
-let g:Tex_ViewRule_pdf='evince'
-let g:Tex_ViewRule_dvi='xdvi'
-let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
-let g:Tex_CompileRule_pdf = "latexrun $*"
-let g:livepreview_previewer = 'evince'
-let g:livepreview_engine = 'latexrun'
-let g:livepreview_engine = 'pdflatex'
+let g:polyglot_disabled = ['latex']
+let g:vimtex_format_enabled = 1
+let g:vimtex_view_method = 'mupdf'
 let g:sneak#label = 1
 " Centrar la siguiente coincidencia en la pantalla
 nnoremap n nzz
@@ -338,8 +339,10 @@ if has("autocmd")
     au FileType php,ctp call MapPhp()
     au FileType erlang call MapErl()
     au FileType javascript call MapJs()
+    au FileType tex call MapTex()
     au FileType php set omnifunc=phpcomplete#CompletePHP
     au FileType xml,svg set equalprg=xmllint\ --format\ -
+    au BufReadPre *.tex let b:vimtex_main = 'main.tex'
     au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
     au BufNewFile,BufReadPost *.coffee setl shiftwidth=4 expandtab
     au BufRead,BufNewFile *.R setf r

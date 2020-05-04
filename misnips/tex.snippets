@@ -1,5 +1,5 @@
-# Información del archivo 
-# :Archivo:	tex.snippets 
+# Información del archivo
+# :Archivo:	tex.snippets
 # :Autor:  	Rubén Toca Lucio
 # :Fecha:  	mar 24 may 2016 23:52:07 CEST
 # :Motivo:	plantilla para documentos latex
@@ -19,7 +19,7 @@ def cls():
 endglobal
 
 
-snippet preambulo "Preámbulo por defecto" bA 
+snippet preambulo "Preámbulo por defecto" bA
 \\documentclass[${1:oneside},spanish,a4paper,12pt,${2:twocolumn}]\{${3:memoir}\}
 \\usepackage[T1]\{fontenc\}
 \\usepackage[utf8]\{inputenc\}
@@ -36,16 +36,16 @@ snippet preambulo "Preámbulo por defecto" bA
 % \\usepackage\{tikz\}
 % \\usetikzlibrary\{calendar,shapes,snakes,calc,shadows\}
 % \\usepackage\{eso-pic\}
-% \\usepackage\{lscape\} 
+% \\usepackage\{lscape\}
 % \\pagestyle\{empty\}
 % \\tikzstyle\{every picture\}+=[remember picture, overlay]
 % \\graphicspath\{\{img/\}\}
-% 
+%
 % \\makeatletter
 % \\newcommand\{\\Repeat\}[1]\{%
 %     \\expandafter\\@Repeat\\expandafter\{\\the\\numexpr #1\\relax\}%
 % \}
-% 
+%
 % \\def\\@Repeat#1\{%
 %     \\ifnum#1>0
 %         \\expandafter\\@@Repeat\\expandafter\{\\the\\numexpr #1-1\\expandafter\\relax\\expandafter\}%
@@ -61,6 +61,6 @@ snippet preambulo "Preámbulo por defecto" bA
 \\begin\{document\}
 ${0}
 \\end\{document\}
-endsnippet 
+endsnippet
 
 # vim: set fdm=syntax ts=4 sw=4 tw=82 noet :
