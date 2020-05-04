@@ -127,9 +127,6 @@
 [submodule "pack/plugins/start/fastfold"]
 	path = pack/plugins/start/fastfold
 	url = https://github.com/Konfekt/FastFold.git
-[submodule "pack/plugins/start/echodoc"]
-	path = pack/plugins/start/echodoc
-	url = https://github.com/Shougo/echodoc.vim.git
 [submodule "pack/plugins/start/pear-tree"]
 	path = pack/plugins/start/pear-tree
 	url = https://github.com/tmsvg/pear-tree.git
