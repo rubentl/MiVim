@@ -97,9 +97,6 @@
 [submodule "pack/plugins/start/polyglot"]
 	path = pack/plugins/start/polyglot
 	url = https://github.com/sheerun/vim-polyglot
-[submodule "pack/plugins/start/indentLine"]
-	path = pack/plugins/start/indentLine
-	url = https://github.com/Yggdroot/indentLine
 [submodule "pack/plugins/start/gitgutter"]
 	path = pack/plugins/start/gitgutter
 	url = https://github.com/airblade/vim-gitgutter
