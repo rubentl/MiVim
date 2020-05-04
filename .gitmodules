@@ -136,6 +136,9 @@
 [submodule "pack/plugins/start/bookmarks"]
 	path = pack/plugins/start/bookmarks
 	url = https://github.com/MattesGroeger/vim-bookmarks.git
+[submodule "pack/plugins/start/vaxe"]
+	path = pack/plugins/start/vaxe
+	url = https://github.com/jdonaldson/vaxe.git
 [submodule "pack/plugins/start/vimtex"]
 	path = pack/plugins/start/vimtex
 	url = https://github.com/lervag/vimtex.git
