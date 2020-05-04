@@ -263,6 +263,16 @@ let g:polyglot_disabled = ['latex']
 let g:vimtex_format_enabled = 1
 let g:vimtex_view_method = 'mupdf'
 let g:sneak#label = 1
+let g:bookmark_auto_save_file = $HOME . "/.vim/bookmarks"
+let g:bookmark_center = 1
+" Cambio los atajos de teclado que trae por defecto bookmarks.
+let g:bookmark_no_default_key_mappings = 1
+nnoremap <Leader>mm <Plug>BookmarkToggle
+nnoremap <Leader>mi <Plug>BookmarkAnnotate
+nnoremap <Leader>ma <Plug>BookmarkShowAll
+nnoremap <Leader>mn <Plug>BookmarkNext
+nnoremap <Leader>mp <Plug>BookmarkPrev
+nnoremap <Leader>md <Plug>BookmarkClear
 " Centrar la siguiente coincidencia en la pantalla
 nnoremap n nzz
 nnoremap N Nzz
