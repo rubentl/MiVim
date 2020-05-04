@@ -299,14 +299,6 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 nnoremap <leader>bd :colorscheme gruvbox <bar> set background=dark<cr>
 nnoremap <leader>bl :colorscheme solarized <bar> set background=light<cr>
 
-" if executable('nimlsp')
-"    au User lsp_setup call lsp#register_server({
-"      \ 'name': 'nimlsp',
-"      \ 'cmd': {server_info->['nimlsp']},
-"      \ 'whitelist': ['nim'],
-"      \ })
-" endif
-
 function! s:check_back_space() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'

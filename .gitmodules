@@ -115,9 +115,6 @@
 [submodule "pack/plugins/start/asyncomplete-lsp"]
 	path = pack/plugins/start/asyncomplete-lsp
 	url = https://github.com/prabirshrestha/asyncomplete-lsp.vim.git
-[submodule "pack/plugins/start/nim"]
-	path = pack/plugins/start/nim
-	url = https://github.com/zah/nim.vim.git
 [submodule "pack/plugins/start/sneak"]
 	path = pack/plugins/start/sneak
 	url = https://github.com/justinmk/vim-sneak.git
