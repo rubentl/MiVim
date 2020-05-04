@@ -24,7 +24,7 @@ function! MapTex()
         \})
 endfunction
 function! MapPhp()
-    imap .. =>
+    imap ,, =>
     imap -- ->
 endfunction
 function! MapJs()
