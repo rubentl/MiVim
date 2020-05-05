@@ -282,6 +282,10 @@ nnoremap <Leader>ma <Plug>BookmarkShowAll
 nnoremap <Leader>mn <Plug>BookmarkNext
 nnoremap <Leader>mp <Plug>BookmarkPrev
 nnoremap <Leader>md <Plug>BookmarkClear
+let g:splitjoin_split_mapping = ''
+let g:splitjoin_join_mapping = ''
+nnoremap <Leader>j :SplitjoinJoin<cr>
+nnoremap <Leader>s :SplitjoinSplit<cr>
 nnoremap <Leader>tw :TrailingWhitespace<cr>
 nnoremap <Leader>dh :DeleteHiddenBuffers<cr>
 " Centrar la siguiente coincidencia en la pantalla
