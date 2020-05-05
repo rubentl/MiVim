@@ -127,6 +127,14 @@ function! ToggleHiddenAll()
     endif
 endfunction
 
+function DeleteHiddenBuffers() " Vim with the 'hidden' option
+  let tpbl=[]
+  call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+  for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+    silent execute 'bwipeout' buf
+  endfor
+endfunction
+command! DeleteHiddenBuffers call DeleteHiddenBuffers()
 let maplocalleader = ","
 let mapleader = ","
 if has('nvim')
@@ -275,6 +283,7 @@ nnoremap <Leader>mn <Plug>BookmarkNext
 nnoremap <Leader>mp <Plug>BookmarkPrev
 nnoremap <Leader>md <Plug>BookmarkClear
 nnoremap <Leader>tw :TrailingWhitespace<cr>
+nnoremap <Leader>dh :DeleteHiddenBuffers<cr>
 " Centrar la siguiente coincidencia en la pantalla
 nnoremap n nzz
 nnoremap N Nzz
