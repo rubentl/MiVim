@@ -110,6 +110,7 @@ function! TrailingWhitespace()
   endif
   normal `Z
 endfunction
+command! TrailingWhitespace call TrailingWhitespace()
 function! ToggleHiddenAll()
     if s:hidden_all  == 0
         let s:hidden_all = 1
@@ -273,6 +274,7 @@ nnoremap <Leader>ma <Plug>BookmarkShowAll
 nnoremap <Leader>mn <Plug>BookmarkNext
 nnoremap <Leader>mp <Plug>BookmarkPrev
 nnoremap <Leader>md <Plug>BookmarkClear
+nnoremap <Leader>tw :TrailingWhitespace<cr>
 " Centrar la siguiente coincidencia en la pantalla
 nnoremap n nzz
 nnoremap N Nzz
