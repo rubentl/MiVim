@@ -1,4 +1,5 @@
 set packpath^=~/.vim
+
 function! MapTex()
     imap á \'a
     imap é \'e
@@ -23,18 +24,22 @@ function! MapTex()
         \'tex': g:vimtex#re#deoplete
         \})
 endfunction
+
 function! MapPhp()
     imap ,, =>
     imap -- ->
 endfunction
+
 function! MapJs()
     imap ,, =>
 endfunction
+
 function! MapErl()
     imap -- ->
     imap .. =>
     imap << <<>><left><left>
 endfunction
+
 function! MapHtml()
     " imap á &aacute;
     " imap é &eacute;
@@ -56,6 +61,7 @@ function! MapHtml()
     imap º &ordm;
     imap € &euro;
 endfunction
+
 function! MapEmmet()
   let g:user_emmet_install_global = 0
   let g:user_emmet_leader_key = '<C-y>'
@@ -77,6 +83,7 @@ function! MapEmmet()
   let g:user_emmet_mergelines_key = '<C-y>m'
   let g:user_emmet_codepretty_key = '<C-y>c'
 endfunction
+
 function! ToggleVExplorer()
   if exists("t:expl_buf_num")
       let expl_win_num = bufwinnr(t:expl_buf_num)
@@ -95,12 +102,14 @@ function! ToggleVExplorer()
       let t:expl_buf_num = bufnr("%")
   endif
 endfunction
+
 function! AppendModeline()
     let l:modeline = printf(" vim: set fdm=%s ts=%d sw=%d tw=%d %set :",
                 \ &foldmethod, &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
     let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
     call append(line("$"), l:modeline)
 endfunction
+
 function! TrailingWhitespace()
   normal mZ
   let l:chars = col("$")
@@ -111,6 +120,7 @@ function! TrailingWhitespace()
   normal `Z
 endfunction
 command! TrailingWhitespace call TrailingWhitespace()
+
 function! ToggleHiddenAll()
     if s:hidden_all  == 0
         let s:hidden_all = 1
@@ -135,20 +145,12 @@ function DeleteHiddenBuffers() " Vim with the 'hidden' option
   endfor
 endfunction
 command! DeleteHiddenBuffers call DeleteHiddenBuffers()
-let maplocalleader = ","
-let mapleader = ","
-if has('nvim')
-    if exists(':tnoremap')
-        tnoremap <Esc> <C-\><C-n>
-        tnoremap <C-v><Esc> <Esc>
-    endif
-endif
-let s:hidden_all = 0
 
 filetype on
 syntax on
 filetype plugin on
 filetype indent on
+
 set viminfo=""
 set lazyredraw
 set helplang=es
@@ -202,12 +204,24 @@ set wildignore+=*/coverage/*
 set guifont=Fira\ Code\ Light\ 12
 set tags=~/.vim/tags
 set background=dark
+if &term =~ '256color'
+  " disable Background Color Erase (BCE) so that color schemes
+  " render properly when inside 256-color tmux and GNU screen.
+  " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+  set t_ut=
+endif
+
 colorscheme gruvbox
+
+let s:hidden_all = 0
+let maplocalleader = ","
+let mapleader = ","
 let &colorcolumn=join(range(83,999),",")
 let g:deoplete#enable_at_startup = 1
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 let wiki = { 'scratch_path': 'notas','path': '~/Documentos/wiki',}
 let notas = { 'scratch_path': 'notas', 'path': '~/Documentos',}
 let g:riv_projects = [wiki, notas]
@@ -224,7 +238,6 @@ let g:erlang_folding = 1
 let g:perl_fold = 1
 let g:tex_flavor='latex'
 let g:solarized_termcolors=256
-" Goyo Settings
 let g:goyo_width=100
 let g:goyo_margin_top = 2
 let g:goyo_margin_bottom = 2
@@ -244,7 +257,7 @@ let g:mundo_width = 40
 let g:mundo_preview_height = 10
 let g:yapf_style = "pep8"
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "misnips"]
-let g:UltiSnipsExpandTrigger = '<s-tab>'
+let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 let g:rustfmt_autosave = 1
@@ -259,9 +272,7 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tagbar#enabled = 1
 let g:generate_tags=1
-let g:haddock_browser='/usr/bin/firefox'
-let g:pandoc#filetypes#handled = ["pandoc", "markdown"]
-let g:pandoc#filetypes#pandoc_markdown = 0
+let g:haddock_browser='/usr/bin/qutebrowser'
 " Debugger remap
 let g:vdebug_keymap = {
     \   "run" : "<leader><F5>",
@@ -334,10 +345,8 @@ inoremap <silent><expr> <TAB>
   \ <SID>check_back_space() ? "\<TAB>" :
   \ asyncomplete#force_refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap jj <esc>
 
-" Enable omni completio autocmd FileType python setlocal omnifunc=python#complete
-" autocmd FileType python setlocal omnifunc=#complete
-" autocmd VimEnter * nested :call tagbar#autoopen()
 if has("autocmd")
     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
     au BufNewFile,BufRead *.hx,*.as set filetype=haxe
@@ -357,19 +366,19 @@ if has("autocmd")
     au FileType tex call MapTex()
     au FileType php set omnifunc=phpcomplete#CompletePHP
     au FileType xml,svg set equalprg=xmllint\ --format\ -
+    au FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
+    au FileType python setl equalprg=yapf
     au BufReadPre *.tex let b:vimtex_main = 'main.tex'
     au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
     au BufNewFile,BufReadPost *.coffee setl shiftwidth=4 expandtab
     au BufRead,BufNewFile *.R setf r
-    au BufEnter *.hs compiler ghc
-    au FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
-    au FileType python setl equalprg=yapf
     au BufRead,BufNewFile *.css,*.html,*.less,*.xhtml call MapEmmet()
+    au BufEnter *.hs compiler ghc
+    au WinEnter * vertical resize 89
     au User GoyoEnter Limelight
     au User GoyoLeave Limelight!
-    au BufWritePre * %s/\s\+$//e
+    au BufWritePre * call TrailingWhitespace()
     au BufWritePost $MYVIMRC source $MYVIMRC
-    au WinEnter * vertical resize 89
 endif " has("autocmd")
 
 " vim: set ts=5 sw=4 tw=82 et foldlevel=0:
