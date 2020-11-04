@@ -118,9 +118,6 @@
 [submodule "pack/plugins/start/sneak"]
 	path = pack/plugins/start/sneak
 	url = https://github.com/justinmk/vim-sneak.git
-[submodule "pack/plugins/start/flog"]
-	path = pack/plugins/start/flog
-	url = https://github.com/rbong/vim-flog.git
 [submodule "pack/plugins/start/ansiEsc"]
 	path = pack/plugins/start/ansiEsc
 	url = https://github.com/powerman/vim-plugin-AnsiEsc.git
@@ -142,3 +139,6 @@
 [submodule "pack/plugins/start/vimtex"]
 	path = pack/plugins/start/vimtex
 	url = https://github.com/lervag/vimtex.git
+[submodule "pack/plugins/start/vifm"]
+	path = pack/plugins/start/vifm
+	url = https://github.com/vifm/vifm.vim.git

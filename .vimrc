@@ -1,30 +1,5 @@
 set packpath^=~/.vim
 
-function! MapTex()
-    imap á \'a
-    imap é \'e
-    imap í \'{\i}
-    imap ó \'o
-    imap ú \'u
-    imap Á \'A
-    imap É \'E
-    imap Í \'I
-    imap Ó \'O
-    imap Ú \'U
-    imap ü \"u
-    imap Ü \"U
-    imap ¡ \textexclamdown{}
-    imap ¿ \textquestiondown{}
-    imap ñ \~n
-    imap Ñ \~N
-    if empty(v:servername) && exists('*remote_startserver')
-      call remote_startserver('VIM')
-    endif
-    call deoplete#custom#var('omni', 'input_patterns', {
-        \'tex': g:vimtex#re#deoplete
-        \})
-endfunction
-
 function! MapPhp()
     imap ,, =>
     imap -- ->
@@ -36,7 +11,7 @@ endfunction
 
 function! MapErl()
     imap -- ->
-    imap .. =>
+    imap ,, =>
     imap << <<>><left><left>
 endfunction
 
@@ -146,6 +121,29 @@ function DeleteHiddenBuffers() " Vim with the 'hidden' option
 endfunction
 command! DeleteHiddenBuffers call DeleteHiddenBuffers()
 
+" Insert a newline after each specified string (or before if use '!').
+" If no arguments, use previous search.
+function! LineBreakAt(bang, ...) range
+  let save_search = @/
+  if empty(a:bang)
+    let before = ''
+    let after = '\ze.'
+    let repl = '&\r'
+  else
+    let before = '.\zs'
+    let after = ''
+    let repl = '\r&'
+  endif
+command! -bang -nargs=* -range LineBreakAt <line1>,<line2>call LineBreakAt('<bang>', <f-args>)
+
+  let pat_list = map(deepcopy(a:000), "escape(v:val, '/\\.*$^~[')")
+  let find = empty(pat_list) ? @/ : join(pat_list, '\|')
+  let find = before . '\%(' . find . '\)' . after
+  " Example: 10,20s/\%(arg1\|arg2\|arg3\)\ze./&\r/ge
+  execute a:firstline . ',' . a:lastline . 's/'. find . '/' . repl . '/ge'
+  let @/ = save_search
+endfunction
+
 filetype on
 syntax on
 filetype plugin on
@@ -201,7 +199,10 @@ set pumheight=15
 set wildignore+=*.pyc
 set wildignore+=*_build/*
 set wildignore+=*/coverage/*
-set guifont=Fira\ Code\ Light\ 12
+" Para las ligaduras de las fuentes
+let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
+" set guifont=Inconsolata\ Condensed\ Light\ 16
+set guifont=Iosevka\ Fixed\ SS07\ Light\ 13
 set tags=~/.vim/tags
 set background=dark
 if &term =~ '256color'
@@ -210,25 +211,18 @@ if &term =~ '256color'
   " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
   set t_ut=
 endif
-
 colorscheme gruvbox
 
+let &colorcolumn = join(range(83,999),",")
 let s:hidden_all = 0
 let maplocalleader = ","
 let mapleader = ","
-let &colorcolumn=join(range(83,999),",")
 let g:deoplete#enable_at_startup = 1
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-let wiki = { 'scratch_path': 'notas','path': '~/Documentos/wiki',}
-let notas = { 'scratch_path': 'notas', 'path': '~/Documentos',}
-let g:riv_projects = [wiki, notas]
-let g:riv_default_path = '~/Documentos'
-let g:riv_month_names = 'Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre'
 let g:xml_no_html = 1
-let g:vimtex_fold_enabled=1
 let g:vimsyn_folding='af'
 let g:rust_fold = 1
 let g:javaScript_folding=1
@@ -236,7 +230,6 @@ let g:xml_syntax_folding = 1
 let g:php_folding = 1
 let g:erlang_folding = 1
 let g:perl_fold = 1
-let g:tex_flavor='latex'
 let g:solarized_termcolors=256
 let g:goyo_width=100
 let g:goyo_margin_top = 2
@@ -265,6 +258,9 @@ let g:ale_fix_on_save = 1
 let g:ale_open_list = 1
 let g:ale_list_vertical = 1
 let g:ale_completion_enabled = 1
+let g:ale_fixers = {
+    \ 'python': ['yapf']
+    \}
 let g:ctags_statusline=1
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#hunks#enabled = 1
@@ -278,27 +274,29 @@ let g:vdebug_keymap = {
     \   "run" : "<leader><F5>",
     \   "set_breakpoint" : "<leader><F10>",
     \}
-" Tex settings
-let g:polyglot_disabled = ['latex']
-let g:vimtex_format_enabled = 1
-let g:vimtex_view_method = 'mupdf'
 let g:sneak#label = 1
 let g:bookmark_auto_save_file = $HOME . "/.vim/bookmarks"
 let g:bookmark_center = 1
 " Cambio los atajos de teclado que trae por defecto bookmarks.
 let g:bookmark_no_default_key_mappings = 1
-nnoremap <Leader>mm <Plug>BookmarkToggle
-nnoremap <Leader>mi <Plug>BookmarkAnnotate
-nnoremap <Leader>ma <Plug>BookmarkShowAll
-nnoremap <Leader>mn <Plug>BookmarkNext
-nnoremap <Leader>mp <Plug>BookmarkPrev
-nnoremap <Leader>md <Plug>BookmarkClear
+nnoremap <Leader>mt :BookmarkToggle<cr>
+nnoremap <Leader>ma :BookmarkAnnotate<cr>
+nnoremap <Leader>ms :BookmarkShowAll<cr>
+nnoremap <Leader>mn :BookmarkNext<cr>
+nnoremap <Leader>mp :BookmarkPrev<cr>
+nnoremap <Leader>md :BookmarkClear<cr>
 let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
+let g:tex_flavor='latex'
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/vim-lsp.log')
 nnoremap <Leader>j :SplitjoinJoin<cr>
 nnoremap <Leader>s :SplitjoinSplit<cr>
 nnoremap <Leader>tw :TrailingWhitespace<cr>
 nnoremap <Leader>dh :DeleteHiddenBuffers<cr>
+" Macro para crear un nuevo archivo del diario basado en el activo.
+" @s: s de scratch
+let @s = "ggVGy\<C-E>scPGzRdd:w\<Enter>gg"
 " Centrar la siguiente coincidencia en la pantalla
 nnoremap n nzz
 nnoremap N Nzz
@@ -345,6 +343,8 @@ inoremap <silent><expr> <TAB>
   \ <SID>check_back_space() ? "\<TAB>" :
   \ asyncomplete#force_refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr> <C-y> pumvisible() ? asyncomplete#close_popup() : "\<C-y>"
+inoremap <expr> <C-e> pumvisible() ? asyncomplete#cancel_popup() : "\<C-e>"
 inoremap jj <esc>
 
 if has("autocmd")
@@ -354,23 +354,20 @@ if has("autocmd")
     au BufNewFile,BufRead *.mxml set filetype=mxml
     au BufNewFile,BufRead *.asm,*.s,*.inc,*.fasm set filetype=fasm
     au BufNewFile,BufRead *.less set filetype=css
-    au FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-    au FileType html,markdown,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
-    au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    " au FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    " au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+    " au FileType html,markdown,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
+    " au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
     au FileType html,xhtml set equalprg=tidy\ -icmq\ -utf8\ -w\ 80\ -asxml | compiler tidy
     au FileType html,xhtml call MapHtml()
     au FileType php,ctp call MapPhp()
     au FileType erlang call MapErl()
     au FileType javascript call MapJs()
-    au FileType tex call MapTex()
-    au FileType php set omnifunc=phpcomplete#CompletePHP
+    " au FileType php set omnifunc=phpcomplete#CompletePHP
     au FileType xml,svg set equalprg=xmllint\ --format\ -
     au FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
     au FileType python setl equalprg=yapf
-    au BufReadPre *.tex let b:vimtex_main = 'main.tex'
-    au BufNewFile,BufReadPost *.coffee setl foldmethod=indent nofoldenable
-    au BufNewFile,BufReadPost *.coffee setl shiftwidth=4 expandtab
+    au BufNewFile,BufReadPost *.coffee setl shiftwidth=4 expandtab foldmethod=indent nofoldenable
     au BufRead,BufNewFile *.R setf r
     au BufRead,BufNewFile *.css,*.html,*.less,*.xhtml call MapEmmet()
     au BufEnter *.hs compiler ghc
