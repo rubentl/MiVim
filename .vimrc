@@ -143,7 +143,22 @@ command! -bang -nargs=* -range LineBreakAt <line1>,<line2>call LineBreakAt('<ban
   execute a:firstline . ',' . a:lastline . 's/'. find . '/' . repl . '/ge'
   let @/ = save_search
 endfunction
-
+function! ThemeCommon()
+  let g:gruvbox_material_enable_italic = 1
+  let g:gruvbox_material_palette = 'material'
+endfunction
+function! ThemeDark()
+  call ThemeCommon()
+  let g:gruvbox_material_background = 'hard'
+  set background=dark
+  colorscheme gruvbox-material
+endfunction
+function! ThemeLight()
+  call ThemeCommon()
+  let g:gruvbox_material_background = 'soft'
+  set background=light
+  colorscheme gruvbox-material
+endfunction
 filetype on
 syntax on
 filetype plugin on
@@ -161,6 +176,11 @@ set backup
 set backupdir=~/.vim/.bak//
 set swapfile
 set directory=~/.vim/.swap//
+" Don't save backups of *.gpg files
+set backupskip+=*.gpg
+" To avoid that parts of the file is saved to .viminfo when yanking or
+" deleting, empty the 'viminfo' option.
+set viminfo=
 set expandtab
 set go-=T
 set go-=r
@@ -199,20 +219,20 @@ set pumheight=15
 set wildignore+=*.pyc
 set wildignore+=*_build/*
 set wildignore+=*/coverage/*
-" Para las ligaduras de las fuentes
-let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
+set tags=~/.vim/tags
+" if has('termguicolors')
+"    set termguicolors
+" endif
 " set guifont=Inconsolata\ Condensed\ Light\ 16
 set guifont=Iosevka\ Fixed\ SS07\ Light\ 13
-set tags=~/.vim/tags
-set background=dark
+" Para las ligaduras de las fuentes
+let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
 if &term =~ '256color'
   " disable Background Color Erase (BCE) so that color schemes
   " render properly when inside 256-color tmux and GNU screen.
   " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
   set t_ut=
 endif
-colorscheme gruvbox
-
 let &colorcolumn = join(range(83,999),",")
 let s:hidden_all = 0
 let maplocalleader = ","
@@ -246,6 +266,9 @@ let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
+let g:loaded_netrw = 1
+let g:vifm_replace_netrw = 1
+let g:vifm_embed_split = 1
 let g:mundo_width = 40
 let g:mundo_preview_height = 10
 let g:yapf_style = "pep8"
@@ -259,9 +282,23 @@ let g:ale_open_list = 1
 let g:ale_list_vertical = 1
 let g:ale_completion_enabled = 1
 let g:ale_fixers = {
+    \ 'javascript': ['prettier'],
+    \ 'css': ['prettier'],
+    \ 'html': ['prettier'],
+    \ 'php': ['phpcbf'],
     \ 'python': ['yapf']
     \}
+" ale linters config
+let g:ale_linters = {
+    \ 'javascript': ['prettier'],
+    \ 'css': ['prettier'],
+    \ 'html': ['prettier'],
+    \ 'python': ['flake8', 'pylint'],
+    \ 'php': ['phpcbf']
+    \}
+
 let g:ctags_statusline=1
+let g:airline_theme = 'gruvbox_material'
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#branch#enabled = 1
@@ -309,7 +346,8 @@ nnoremap <F2> :TagbarToggle<cr>
 nnoremap <F3> :if &go=~#'m'<Bar>set go-=m<Bar>else<Bar>set go+=m<Bar>endif<CR>
 nnoremap <F4> :MundoToggle<CR>
 nnoremap <F5> :execute "noautocmd vimgrep /\\<" . expand("<cword>") . "\\>/ **/*"<CR>
-nnoremap <silent> <leader>nn :call ToggleVExplorer()<cr>
+" nnoremap <silent> <leader>nn :call ToggleVExplorer()<cr>
+nnoremap <silent> <leader>nn :Vifm<cr>
 nnoremap <F10> :buffers<CR>:buffer<Space>
 nnoremap <silent> <Leader>ml :call AppendModeline()<CR>
 nnoremap <S-h> :call ToggleHiddenAll()<CR>
@@ -330,8 +368,8 @@ nnoremap <leader>ww :vertical resize 89<CR>
 nnoremap <leader>ev :split $MYVIMRC<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
 " dark or ligth colorscheme
-nnoremap <leader>bd :colorscheme gruvbox <bar> set background=dark<cr>
-nnoremap <leader>bl :colorscheme solarized <bar> set background=light<cr>
+nnoremap <leader>bd :call ThemeDark()<cr>
+nnoremap <leader>bl :call ThemeLight()<cr>
 
 function! s:check_back_space() abort
     let col = col('.') - 1
@@ -358,13 +396,13 @@ if has("autocmd")
     " au FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
     " au FileType html,markdown,xhtml setlocal omnifunc=htmlcomplete#CompleteTags
     " au FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    au FileType html,xhtml set equalprg=tidy\ -icmq\ -utf8\ -w\ 80\ -asxml | compiler tidy
+    " au FileType html,xhtml set equalprg=tidy\ -icmq\ -utf8\ -w\ 80\ -asxml | compiler tidy
     au FileType html,xhtml call MapHtml()
     au FileType php,ctp call MapPhp()
     au FileType erlang call MapErl()
     au FileType javascript call MapJs()
     " au FileType php set omnifunc=phpcomplete#CompletePHP
-    au FileType xml,svg set equalprg=xmllint\ --format\ -
+    au FileType xml,svg,html,xhtml set equalprg=xmllint\ --format\ -
     au FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
     au FileType python setl equalprg=yapf
     au BufNewFile,BufReadPost *.coffee setl shiftwidth=4 expandtab foldmethod=indent nofoldenable
@@ -376,6 +414,30 @@ if has("autocmd")
     au User GoyoLeave Limelight!
     au BufWritePre * call TrailingWhitespace()
     au BufWritePost $MYVIMRC source $MYVIMRC
+augroup encrypted
+  au!
+  " Disable swap files, and set binary file format before reading the file
+  autocmd BufReadPre,FileReadPre *.gpg
+    \ setlocal noswapfile bin
+  " Decrypt the contents after reading the file, reset binary file format
+  " and run any BufReadPost autocmds matching the file name without the .gpg
+  " extension
+  autocmd BufReadPost,FileReadPost *.gpg
+    \ execute "'[,']!gpg --decrypt --default-recipient-self" |
+    \ setlocal nobin |
+    \ execute "doautocmd BufReadPost " . expand("%:r")
+  " Set binary file format and encrypt the contents before writing the file
+  autocmd BufWritePre,FileWritePre *.gpg
+    \ setlocal bin |
+    \ '[,']!gpg --encrypt --default-recipient-self
+  " After writing the file, do an :undo to revert the encryption in the
+  " buffer, and reset binary file format
+  autocmd BufWritePost,FileWritePost *.gpg
+    \ silent u |
+    \ setlocal nobin
+augroup END
 endif " has("autocmd")
+
+call ThemeDark()
 
 " vim: set ts=5 sw=4 tw=82 et foldlevel=0:

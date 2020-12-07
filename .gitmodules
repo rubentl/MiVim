@@ -4,9 +4,6 @@
 [submodule "pack/plugins/start/tagbar"]
 	path = pack/plugins/start/tagbar
 	url = https://github.com/majutsushi/tagbar
-[submodule "pack/plugins/start/gruvbox"]
-	path = pack/plugins/start/gruvbox
-	url = https://github.com/morhetz/gruvbox
 [submodule "pack/plugins/start/surround"]
 	path = pack/plugins/start/surround
 	url = https://github.com/tpope/vim-surround
@@ -40,9 +37,6 @@
 [submodule "pack/plugins/start/goyo"]
 	path = pack/plugins/start/goyo
 	url = https://github.com/junegunn/goyo.vim
-[submodule "pack/plugins/start/neovim-colors-solarized-truecolor-only"]
-	path = pack/plugins/start/neovim-colors-solarized-truecolor-only
-	url = https://github.com/frankier/neovim-colors-solarized-truecolor-only
 [submodule "pack/plugins/start/vim-erlang-omnicomplete"]
 	path = pack/plugins/start/vim-erlang-omnicomplete
 	url = https://github.com/vim-erlang/vim-erlang-omnicomplete
@@ -142,3 +136,6 @@
 [submodule "pack/plugins/start/vifm"]
 	path = pack/plugins/start/vifm
 	url = https://github.com/vifm/vifm.vim.git
+[submodule "pack/plugins/start/gruvbox-material"]
+	path = pack/plugins/start/gruvbox-material
+	url = https://github.com/sainnhe/gruvbox-material.git
