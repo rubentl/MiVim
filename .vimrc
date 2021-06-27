@@ -134,7 +134,7 @@ function! LineBreakAt(bang, ...) range
     let after = ''
     let repl = '\r&'
   endif
-command! -bang -nargs=* -range LineBreakAt <line1>,<line2>call LineBreakAt('<bang>', <f-args>)
+  command! -bang -nargs=* -range LineBreakAt <line1>,<line2>call LineBreakAt('<bang>', <f-args>)
 
   let pat_list = map(deepcopy(a:000), "escape(v:val, '/\\.*$^~[')")
   let find = empty(pat_list) ? @/ : join(pat_list, '\|')
@@ -143,21 +143,51 @@ command! -bang -nargs=* -range LineBreakAt <line1>,<line2>call LineBreakAt('<ban
   execute a:firstline . ',' . a:lastline . 's/'. find . '/' . repl . '/ge'
   let @/ = save_search
 endfunction
-function! ThemeCommon()
+function! CommonTheme()
+  let g:gruvbox_material_better_performance = 1
+  let g:gruvbox_material_enable_bold = 1
   let g:gruvbox_material_enable_italic = 1
+  let g:gruvbox_material_cursor = 'purple'
+  let g:gruvbox_material_diagnostic_line_highlight = 1
   let g:gruvbox_material_palette = 'material'
+  " let g:gruvbox_material_transparent_background = 1
+endfunction
+function! ThemeLight()
+  call CommonTheme()
+  let g:gruvbox_material_background = 'soft'
+  set background=light
+  colorscheme gruvbox-material
 endfunction
 function! ThemeDark()
-  call ThemeCommon()
+  call CommonTheme()
   let g:gruvbox_material_background = 'hard'
   set background=dark
   colorscheme gruvbox-material
 endfunction
-function! ThemeLight()
-  call ThemeCommon()
-  let g:gruvbox_material_background = 'soft'
-  set background=light
-  colorscheme gruvbox-material
+function! MyTabLine()
+ let s = ''
+ let t = tabpagenr()
+ let i = 1
+ while i <= tabpagenr('$')
+     let buflist = tabpagebuflist(i)
+     let winnr = tabpagewinnr(i)
+     let s .= '%' . i . 'T'
+     let s .= (i == t ? '%1*' : '%2*')
+     let s .= ' '
+     let s .= i . ')'
+     let s .= ' %*'
+     let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+     let file = bufname(buflist[winnr - 1])
+     let file = fnamemodify(file, ':p:t')
+     if file == ''
+         let file = '[No Name]'
+     endif
+     let s .= file
+     let i = i + 1
+ endwhile
+ let s .= '%T%#TabLineFill#%='
+ let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+ return s
 endfunction
 filetype on
 syntax on
@@ -216,17 +246,24 @@ set foldnestmax=10
 set foldlevelstart=4   " open most folds by default
 set foldlevel=0
 set pumheight=15
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*
 set wildignore+=*.pyc
 set wildignore+=*_build/*
 set wildignore+=*/coverage/*
 set tags=~/.vim/tags
-" if has('termguicolors')
-"    set termguicolors
-" endif
+set stal=2
+set tabline=%!MyTabLine()
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 " set guifont=Inconsolata\ Condensed\ Light\ 16
 set guifont=Iosevka\ Fixed\ SS07\ Light\ 13
 " Para las ligaduras de las fuentes
-let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
+if has('gui_running')
+    let g:gtk_nocache=[0x00000000, 0xfc00ffff, 0xf8000001, 0x78000001]
+endif
 if &term =~ '256color'
   " disable Background Color Erase (BCE) so that color schemes
   " render properly when inside 256-color tmux and GNU screen.
@@ -241,7 +278,12 @@ let g:deoplete#enable_at_startup = 1
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+let g:ctrlp_user_command = {
+  \ 'types': {
+    \ 1: ['.git', 'cd %s && git ls-files'],
+    \ },
+  \ 'fallback': 'find %s -type f'
+  \ }
 let g:xml_no_html = 1
 let g:vimsyn_folding='af'
 let g:rust_fold = 1
@@ -370,6 +412,11 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 " dark or ligth colorscheme
 nnoremap <leader>bd :call ThemeDark()<cr>
 nnoremap <leader>bl :call ThemeLight()<cr>
+" Fácil manejo del portapapeles
+nnoremap <leader>p  "+p
+nnoremap <leader>P  "+P
+nnoremap <leader>yy "+yy
+vnoremap <leader>y  "+y
 
 function! s:check_back_space() abort
     let col = col('.') - 1
@@ -414,6 +461,7 @@ if has("autocmd")
     au User GoyoLeave Limelight!
     au BufWritePre * call TrailingWhitespace()
     au BufWritePost $MYVIMRC source $MYVIMRC
+    au VimEnter * call ThemeDark()
 augroup encrypted
   au!
   " Disable swap files, and set binary file format before reading the file
@@ -438,6 +486,5 @@ augroup encrypted
 augroup END
 endif " has("autocmd")
 
-call ThemeDark()
 
 " vim: set ts=5 sw=4 tw=82 et foldlevel=0:
